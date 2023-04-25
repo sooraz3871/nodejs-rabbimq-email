@@ -14,13 +14,14 @@ const publishToQue = async (request) => {
   } = process.env;
   try {
     const conn = await ampqplib.connect(amqp_url);
-    logger.info("Connection Established-RabbitMQ")
+    // logger.info("Connection Established-RabbitMQ")
     const ch = await conn.createChannel();
     await ch.assertExchange(exchange, "direct", { durable: true });
     await ch.assertQueue(queue, { durable: true });
     await ch.bindQueue(queue, exchange, routingKey);
     await ch.publish(exchange, routingKey, Buffer.from(request));
   } catch (error) {
+    logger.info(error)
     throw error;
   }
 };

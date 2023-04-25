@@ -1,0 +1,71 @@
+version: "3.9"
+services:
+  db:
+    image: mongo:6.0.1
+    restart: unless-stopped
+    container_name: "mongodb"
+    ports:
+       - 27016:27017
+    volumes:
+        - mongodb_data_container:/data/db
+    networks:
+        - rabbitmq_nodejs
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    container_name: "rabbitmq"
+    ports:
+        - 5673:5672
+        - 15673:15672
+    volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+        - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    networks:
+        - rabbitmq_nodejs
+        
+  service_publisher:
+    build: ./service-publisher
+    depends_on:
+      - rabbitmq
+      - db
+    container_name: publisher_api
+    restart: unless-stopped
+    ports:
+      - 4000:8000
+    networks:
+        - rabbitmq_nodejs
+    environment:
+         - SERVER_PORT=8000
+         - AMQP_URL=amqp://guest:guest@rabbitmq:5672  
+         - AMQP_EXCHANGE=send_email_exchange
+         - AMQP_QUEUE=email_queue     
+         - AMQP_ROUTING_KEY=AA2023
+         - CONNECTION_STRING=mongodb://db:27017/email_service
+
+  service_subscriber:
+    build: ./service-subscriber
+    restart: unless-stopped
+    depends_on:
+      - rabbitmq
+      - service_publisher
+      - db
+    container_name: subscriber_api
+    ports:
+      - 4001:8001
+    networks:
+        - rabbitmq_nodejs
+    environment:
+         - SERVER_PORT=8001
+         - AMQP_URL=amqp://guest:guest@rabbitmq:5672  
+         - AMQP_EXCHANGE=send_email_exchange
+         - AMQP_QUEUE=email_queue
+         - AMQP_ROUTING_KEY=AA2023
+         - CONNECTION_STRING=mongodb://db:27017/email_service
+         - ETHEREAL_EMAIL=cecil.koss@ethereal.email
+         - ETHEREAL_PASSWORD=kjAbGrM8HkTcWTNfAu  
+      
+networks:
+  rabbitmq_nodejs:
+    driver: bridge 
+
+volumes:
+  mongodb_data_container:

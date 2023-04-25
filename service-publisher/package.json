@@ -4,14 +4,23 @@
   "description": "Mail Publisher Service",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "dev": "npx nodemon server.js debug --true"
   },
   "author": "Suraj Dabadi",
   "license": "ISC",
   "dependencies": {
-    "amqplib": "^0.10.3",
+    "amqplib": "^0.10.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2"
+    "email-validator": "^2.0.4",
+    "express": "^4.18.2",
+    "helmet": "^6.1.5",
+    "moment": "^2.29.4",
+    "mongoose": "^7.0.4",
+    "swagger-ui-express": "^4.6.2",
+    "uuid": "^9.0.0",
+    "winston": "^3.8.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"

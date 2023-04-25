@@ -19,13 +19,6 @@ Reactjs acts as a client.
 9. Bind the exchange with the queue with the routing key 'AA2023'
 10.Check http://localhost:4000/api/api-docs for API documentation
 11.Create a POST request at http://localhost:4000/v1/api/send
-    Sample body:
-    {
-        "destination_email":"hello@helloworld.com",
-        "email_subject":"Hello World",
-        "email_template":1, // choose between 1-5
-        "email_body":"<b>how Are you Again</b>"
-    }
 12. You should see the published messages in the queue after some time in the rabbitmq management ui
 13. Login to https://ethereal.email with the followin creds
         user - cecil.koss@ethereal.email

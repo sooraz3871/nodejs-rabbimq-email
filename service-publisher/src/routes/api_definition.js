@@ -66,16 +66,37 @@
                   },
                 ]
             },
+          },
+          '/send': {
+            post: {
+                tags: ['APIs'],
+                summary: 'Send Email To Recipients',
+                description: 'Send Email To Recipients',
+                operationId: 'createEmail',
+                requestBody: {
+                  content: {
+                    'application/json': {
+                      schema: {
+                        $ref: '#/components/schemas/CreateEmail',
+                      },
+                    },
+                  },
+                  required: true,
+                },
+              }
           }
         },
+
         schemas: {
-            getEmailsResponse: {
-            type: 'object',
-            properties: {
-
-
-            }
-          }
+            CreateEmail: {
+                type: 'object',
+                properties: {
+                  "destination_email": { type: 'string' },
+                  "email_subject": { type: 'string' },
+                  "email_template": { type: 'number' },
+                  "email_body": { type: 'string' },
+                }
+              },
         }
       }
     };
